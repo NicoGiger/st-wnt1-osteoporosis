@@ -1,0 +1,3 @@
+sample_id,group,section_id,platform,raw_path,notes
+ST01,osteo,sec1,,data/raw/ST01,standard osteoporotic section
+ST02,wnt1_oe,sec1,,data/raw/ST02,Wnt1 overexpression; thicker cortex and more trabecular bone
