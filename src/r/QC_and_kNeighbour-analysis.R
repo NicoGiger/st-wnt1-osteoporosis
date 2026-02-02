@@ -198,7 +198,7 @@ volcano(Trab_res, filname = '~/Documents/spatial_transcriptomics/st-wnt1-osteopo
 volcano(Trabk6_res, filname = '~/Documents/spatial_transcriptomics/st-wnt1-osteoporosis/results/figures/volcano_Trabk6.png',
         width = 7, height = 10)
 volcano(Trabk18_res, filname = '~/Documents/spatial_transcriptomics/st-wnt1-osteoporosis/results/figures/volcano_Trabk18.png',
-        width = 7, height = 10)
+        width = 7, height = 10) asdf
 
 
 

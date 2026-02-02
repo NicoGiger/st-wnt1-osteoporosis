@@ -53,7 +53,7 @@ data/raw/
 data/processed/
 
 # ---- results ----
-results/
+#results/
 
 # ---- R ----
 .Rhistory
