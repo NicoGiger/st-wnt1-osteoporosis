@@ -68,3 +68,46 @@ __pycache__/
 .ipynb_checkpoints/
 .venv/
 .env
+
+
+
+# ---- data ----
+
+data/raw/
+
+data/processed/
+
+
+
+# ---- results ----
+
+results/
+
+
+
+# ---- R ----
+
+.Rhistory
+
+.RData
+
+.Rproj.user/
+
+renv/library/
+
+renv/local/
+
+*.Rproj
+
+
+
+# ---- Python ----
+
+__pycache__/
+
+.ipynb_checkpoints/
+
+.venv/
+
+.env
+
