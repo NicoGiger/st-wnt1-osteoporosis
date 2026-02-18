@@ -21,9 +21,9 @@ col13_Giger <-  c("#F0E442", "#009E73",'#99DDFF', "#0072B2",  "#CC79A7",
                   "#000000", "#FFFFFF", "#ececec")
 
 ##### Paths #####
-path.in <- paste0("~/Documents/spatial_transcriptomics/ST_runs/Wnt/")
-path.spa <- paste0("~/Documents/spatial_transcriptomics/st-wnt1-osteoporosis/metadata/spa.csv")
-path.out <- paste0("~/Documents/spatial_transcriptomics/st-wnt1-osteoporosis/results/")
+path.in <- paste0("/media/p_drive/Ulm/Wnt/")
+path.spa <- paste0("~/Documents/st-wnt1-osteoporosis/metadata/spa.csv")
+path.out <- paste0("~/Documents/st-wnt1-osteoporosis/results/")
 path_out_figures <- paste0(path.out, "figures/")
 
 
@@ -35,61 +35,61 @@ SCT2_norm <- function(data, split.by = "group", assay ="Spatial",
   data.norm.list <- list()
   dds.list <- list()
   var_feat.list <- list()
-  
+
   for (sample in data.list){
-    sample <- SCTransform(sample, assay = assay, new.assay.name = "SCT", 
+    sample <- SCTransform(sample, assay = assay, new.assay.name = "SCT",
                           return.only.var.genes = FALSE, variable.features.n = 3000)
-    #vars.to.regress = "Wnt1") # If Wnt1 was orders of magnitudes higher 
+    #vars.to.regress = "Wnt1") # If Wnt1 was orders of magnitudes higher
     data.norm.list <- append(data.norm.list, sample)
     var_feat.sample <- list(VariableFeatures(sample, assay = "SCT"))
     var_feat.list <- c(var_feat.list, var_feat.sample)
   }
-  
+
   # Proper intersection across all groups
   var_feat <- Reduce(intersect, var_feat.list)
-  
+
   # Merge ALL groups (not only the first two)
   merged <- Reduce(function(x, y) merge(x, y), data.norm.list)
-  
+
   DefaultAssay(merged) <- "SCT"
   VariableFeatures(merged) <- var_feat
   merged <- PrepSCTFindMarkers(merged)
-  
+
   # Keep original image (minimal change from your approach)
   merged@images$slice1 <- data@images$slice1
   merged@images$slice1.2 <- NULL
-  
+
   return(merged)
 }
 
 k_neighbor_spots <- function(dd, k) {
   target_spots <- dd@meta.data %>% filter(spa == 'TrabBone') %>% rownames()
   Cavity_spots <- dd@meta.data %>% filter(spa == 'Cavity') %>% rownames()
-  
+
   coords <- GetTissueCoordinates(dd)
   coords_mat <- as.matrix(coords[, c("x", "y")])
   spot_names <- rownames(coords_mat)
-  
+
   nn <- get.knn(coords_mat, k = k)
   target_indices <- match(target_spots, spot_names)
-  
+
   # Collect all neighbors for these spots
   neighbor_indices <- unique(as.vector(nn$nn.index[target_indices, ]))
   neighbor_spots <- spot_names[neighbor_indices]
-  
+
   # Remove self-matches and spots defined in other tissues
   neighbor_spots <- setdiff(neighbor_spots, target_spots)
   neighbor_spots <- intersect(neighbor_spots, Cavity_spots)
-  
+
   # Add trab neighbors to meta.data
   dd$spa[neighbor_spots] <- paste0("Trab neighbor ", k)
-  
+
   dd$idents <- paste(dd$spa, dd$group) #add idents
   return(dd)
 }
 scran_DESeq_DGE <- function(obj, min_prop = 0.1){
   DefaultAssay(obj) <- "Spatial"
-  cts <- GetAssayData(obj, layer = "counts") 
+  cts <- GetAssayData(obj, layer = "counts")
   md <- obj@meta.data
   md <- md[colnames(cts), , drop = FALSE]   # Ensure rownames(md) match colnames(cts)
   md$condition <- factor(md$group, levels = c("Wt", "WntOverExp"))
@@ -100,7 +100,7 @@ scran_DESeq_DGE <- function(obj, min_prop = 0.1){
   #clusters <- quickCluster(sce) # Optional: quick clustering to improve deconvolution stability (recommended by scran)
   # scran deconvolution size factors
   sce <- computeSumFactors(sce)
-  sf <- sizeFactors(sce) 
+  sf <- sizeFactors(sce)
   # DESeq2 with scran size factors
   dds <- DESeqDataSetFromMatrix(
     countData = cts_f,
@@ -109,7 +109,7 @@ scran_DESeq_DGE <- function(obj, min_prop = 0.1){
   )
   # Put scran size factors into DESeq2
   sizeFactors(dds) <- sf
-  
+
   # LRT: test whether condition improves fit vs intercept-only model
   dds <- DESeq(dds, test="LRT", reduced=~1, minmu=1e-6, minRep=Inf)
   res <- results(dds, independentFiltering = FALSE)
@@ -117,11 +117,11 @@ scran_DESeq_DGE <- function(obj, min_prop = 0.1){
   res_df <- as.data.frame(res) %>%
     tibble::rownames_to_column("gene") %>%
     arrange(padj, pvalue)
-  
+
   # Typical thresholds (adjust to your needs)
   cutP <- 0.05
   cutLFC <- 0.5
-  
+
   res_df <- res_df %>%
     mutate(
       DEG = case_when(
@@ -135,16 +135,16 @@ scran_DESeq_DGE <- function(obj, min_prop = 0.1){
   return(res_df)
 }
 
-volcano <- function(scran_deseq_res, GOIs, filename = NULL, force = 1.5, 
-                    max.overlaps = 10, lim = FALSE, ylim = 100, 
+volcano <- function(scran_deseq_res, GOIs, filename = NULL, force = 1.5,
+                    max.overlaps = 10, lim = FALSE, ylim = 100,
                     pval_sug = 0.05) {
   genes_up <- scran_deseq_res %>% filter(DEG == 'UP') %>% slice_min(order_by = pvalue, n = 5) %>% pull(gene)
   genes_down <- scran_deseq_res %>% filter(DEG == 'DOWN') %>% slice_min(order_by = pvalue, n = 5) %>% pull(gene)
   genes_updown <- unique(c(genes_up, genes_down))
-  
+
   plt <- ggplot(data = scran_deseq_res, aes(x = log2FoldChange, y = -log10(pvalue), col = DEG)) +
     geom_point() +
-    scale_color_manual(values = c('DOWN' = 'purple', 'NO' = 'grey', 'UP' = 'orange', 
+    scale_color_manual(values = c('DOWN' = 'purple', 'NO' = 'grey', 'UP' = 'orange',
                                   'SUGGESTIVE DOWN' = '#DB7093', 'SUGGESTIVE UP' = '#FFD700')) +
     theme(text = element_text(size = 20)) +
     geom_vline(xintercept = c(-0.5, 0.5), linetype = "dashed", col = "black") +
@@ -241,7 +241,7 @@ wnt_feedback <- c(
   "Notum","Sfrp1","Sfrp2","Wif1","Nkd1","Nkd2"
 )
 
-gois <- unique(c(lrp_genes, fzd_genes, Wnt_genes, Col_genes, other_genes, 
+gois <- unique(c(lrp_genes, fzd_genes, Wnt_genes, Col_genes, other_genes,
                  wnt_feedback))
 
 #wnt_pathway <- unique(c(
@@ -276,16 +276,16 @@ volcano(Trabk18_res, filname = '~/Documents/spatial_transcriptomics/st-wnt1-oste
 volcano(k18_res, filname = '~/Documents/spatial_transcriptomics/st-wnt1-osteoporosis/results/figures/volcano_k18.png',
         width = 7, height = 10, GOIs = gois)
 
-volcano(Trab_Cavity_res, filname = '~/Documents/spatial_transcriptomics/st-wnt1-osteoporosis/results/figures/volcano_full_cavity.png', 
+volcano(Trab_Cavity_res, filname = '~/Documents/spatial_transcriptomics/st-wnt1-osteoporosis/results/figures/volcano_full_cavity.png',
         width = 7, height = 10, GOIs = gois, max.overlaps = 50)
-volcano(Cavity_res, filname = '~/Documents/spatial_transcriptomics/st-wnt1-osteoporosis/results/figures/volcano_cavity.png', 
+volcano(Cavity_res, filname = '~/Documents/spatial_transcriptomics/st-wnt1-osteoporosis/results/figures/volcano_cavity.png',
         width = 7, height = 10, GOIs = gois)
 
 
 obj <- k6
 k6_list <- SplitObject(k6, split.by = 'group')
 DefaultAssay(obj) <- "Spatial"
-cts <- GetAssayData(obj, layer = "counts") 
+cts <- GetAssayData(obj, layer = "counts")
 md <- obj@meta.data
 md <- md[colnames(cts), , drop = FALSE]   # Ensure rownames(md) match colnames(cts)
 md$condition <- factor(md$group, levels = c("Wt", "WntOverExp"))
@@ -305,29 +305,29 @@ droped_genes <- Matrix::rowSums(cts > 0) <= (ncol(cts) * min_prop)
 scran_DESeq_DGE2 <- function(obj, genes_to_keep,
                              cutP=0.05, cutLFC=0.5, cutP_sug=0.05){
   DefaultAssay(obj) <- "Spatial"
-  cts <- GetAssayData(obj, layer = "counts") 
+  cts <- GetAssayData(obj, layer = "counts")
   md <- obj@meta.data
   md <- md[colnames(cts), , drop = FALSE]   # Ensure rownames(md) match colnames(cts)
   md$condition <- factor(md$group, levels = c("Wt", "WntOverExp"))
   cts_f <- cts[genes_to_keep, ]
   message("Kept genes: ", length(genes_to_keep), " / ", dim(cts)[[1]])
   sce <- SingleCellExperiment(list(counts = cts_f)) # scran expects a SingleCellExperiment with counts
-  
+
   # scran deconvolution size factors
   clusters <- quickCluster(sce) # Optional: quick clustering to improve deconvolution stability (recommended by scran)
   sce <- scran::computeSumFactors(sce, clusters = clusters)
-  sf <- sizeFactors(sce) 
-  
+  sf <- sizeFactors(sce)
+
   # DESeq2 with scran size factors
   dds <- DESeqDataSetFromMatrix(
     countData = cts_f,
     colData   = md,
     design    = ~ condition
   )
-  
+
   # Put scran size factors into DESeq2
   sizeFactors(dds) <- sf
-  
+
   # LRT: test whether condition improves fit vs intercept-only model
   dds <- DESeq(dds, test="LRT", reduced=~1, minmu=1e-6, minRep=Inf)
   res <- results(dds, independentFiltering = FALSE)
@@ -335,7 +335,7 @@ scran_DESeq_DGE2 <- function(obj, genes_to_keep,
   res_df <- as.data.frame(res) %>%
     tibble::rownames_to_column("gene") %>%
     arrange(padj, pvalue)
-  
+
   res_df <- res_df %>%
     mutate(
       DEG = case_when(
@@ -350,7 +350,7 @@ scran_DESeq_DGE2 <- function(obj, genes_to_keep,
 
 GenesByGroup <- function(obj, group = 'group', min_prop){
   obj_split <- SplitObject(obj, split.by = group)
-  
+
   keep_genes <- function(x, min_prop) {
     cts <- GetAssayData(x, layer = "counts")
     keep <- Matrix::rowSums(cts > 0) >= ncol(cts) * min_prop
@@ -374,38 +374,38 @@ Cavity <- subset(dd.norm, subset = spa %in% c("Cavity"))
 #make named list of seurat object to loop through
 obj_list <- list(
   Trab = Trab,
-  Trabk6 = Trabk6, 
-  Trabk18 = Trabk18, 
+  Trabk6 = Trabk6,
+  Trabk18 = Trabk18,
   Trab_Cavity = Trab_Cavity,
-  k6 = k6, 
+  k6 = k6,
   k18 = k18
 )
 obj_list <- list(Trab = Trab,
-                 Trabk6 = Trabk6, 
-                 Trabk18 = Trabk18, 
-                 Trab_Cavity = Trab_Cavity) 
+                 Trabk6 = Trabk6,
+                 Trabk18 = Trabk18,
+                 Trab_Cavity = Trab_Cavity)
 
-#Run Deseq and 
+#Run Deseq and
 for (obj_name in names(obj_list)){
   obj <- obj_list[[obj_name]]
   genes <- GenesByGroup(obj, min_prop = 0.1)
-  
+
   assign(paste0(obj_name,'_genes'), genes[[2]] )
-  
+
   obj_res <- scran_DESeq_DGE2(obj, genes_to_keep = genes[[1]])
   assign(paste0(obj_name,'_res'), obj_res )
-  
+
   # Venn diagram
   Venn_plt <- ggVennDiagram(genes[[2]], label = "count") +
     ggplot2::theme_void()
-  ggsave(plot = Venn_plt, 
-         filename = paste0(path_out_figures, obj_name, '_Venn.png'), 
+  ggsave(plot = Venn_plt,
+         filename = paste0(path_out_figures, obj_name, '_Venn.png'),
          width = 10, height = 7, dpi = 300)
-  
-  
+
+
   Volcano_plt <- volcano(obj_res, GOIs = gois)
-  ggsave(plot = Volcano_plt, filename = paste0(path_out_figures, obj_name,  
-                                               '_volcano.png'), 
+  ggsave(plot = Volcano_plt, filename = paste0(path_out_figures, obj_name,
+                                               '_volcano.png'),
          width = 7, height = 10, dpi = 300)
 }
 
@@ -432,7 +432,7 @@ uni_df <- bitr(Reduce(union, genes),
 uni <- unique(uni_df$ENTREZID)
 uni %>% length()
 
-test <-mapIds(org.Mm.eg.db, keys = Reduce(union, genes), column = "GENETYPE", 
+test <-mapIds(org.Mm.eg.db, keys = Reduce(union, genes), column = "GENETYPE",
        keytype = "SYMBOL",
        multiVals = "first")
 table(test)
@@ -450,7 +450,7 @@ yy@result %>% filter(p.adjust < 0.05) %>% select(Description)
 barplot(yy, showCategory = descriptions, color = 'pvalue')
 dotplot(yy, showCategory = descriptions, color = 'pvalue')
 cnetplot(yy, showCategory = cats)
-heatplot(yy, showCategory = 15) 
+heatplot(yy, showCategory = 15)
 emapplot(pairwise_termsim(yy), showCategory = 30)
 dot_DOWN | dot_UP
 
@@ -464,7 +464,7 @@ ego <- enrichGO(gene_intrest,
                 OrgDb = org.Mm.eg.db,keyType = "ENTREZID",
                 ont = "ALL",
                 pAdjustMethod = "BH",
-                pvalueCutoff= 0.05,qvalueCutoff= 0.05,readable= TRUE) 
+                pvalueCutoff= 0.05,qvalueCutoff= 0.05,readable= TRUE)
 head(ego)
 
 #### Down ########
@@ -478,7 +478,7 @@ gene_interest_down_df <- bitr(NOT_SDOWN, fromType = "SYMBOL",
 gene_interest_down <- unique(gene_interest_down_df$ENTREZID)
 
 yy <-enrichKEGG(gene_interest_down, organism = 'mmu', keyType = "ncbi-geneid",
-                pAdjustMethod = "BH",minGSSize = 0, 
+                pAdjustMethod = "BH",minGSSize = 0,
                 pvalueCutoff  = 0.05,qvalueCutoff=0.1, universe = uni)
 yy@result %>% filter(pvalue < 0.05) %>% pull(Description)
 yy@result %>% filter(p.adjust < 0.05) %>% pull(Description)
@@ -487,7 +487,7 @@ yy@gene %>% length()
 barplot(yy, color = 'p.adjust')
 dotplot(yy, )
 cnetplot(yy, showCategory = 10)
-heatplot(yy, showCategory = 15) 
+heatplot(yy, showCategory = 15)
 emapplot(pairwise_termsim(yy), showCategory = 30)
 
 
@@ -516,7 +516,7 @@ gsea <- GSEA(
   geneList = gl,
   TERM2GENE = db2,
   pvalueCutoff = 0.05,
-  seed = TRUE, 
+  seed = TRUE,
   nPermSimple = 10000
 )
 
@@ -531,11 +531,11 @@ dim(gsea)[1]
 gsea.sorted <- gsea@result[order(gsea@result$NES, decreasing = F),]
 gsea.sorted$color<-ifelse(gsea.sorted$NES<0, "orange", "purple")
 par(mar=c(5,20,3,3))
-barplot(gsea.sorted$NES, 
+barplot(gsea.sorted$NES,
         horiz = T, names=gsea.sorted$Description,
         las=2, xlab="NES",
         cex.names = 0.5,
-        col=gsea.sorted$color) 
+        col=gsea.sorted$color)
 abline(v=0)
 ## gseaplot()
 gseaplot(gsea, geneSetID = gsea.sorted$Description[1])
@@ -562,9 +562,9 @@ WntOverExp_morans_table <- SVFInfo(
   method = "moransi"
 )
 WntOverExp_morans_table['Wnt1', ]
-Wnt1_svg <- WntOverExp_morans_table %>% arrange(MoransI_observed) %>% 
-  filter(MoransI_p.value < 0.05) 
-WT_svg <- WT_morans_table %>% arrange(MoransI_observed) %>% 
+Wnt1_svg <- WntOverExp_morans_table %>% arrange(MoransI_observed) %>%
+  filter(MoransI_p.value < 0.05)
+WT_svg <- WT_morans_table %>% arrange(MoransI_observed) %>%
   filter(MoransI_p.value < 0.05)
 
 WntOverExp_morans_table %>% tail()
