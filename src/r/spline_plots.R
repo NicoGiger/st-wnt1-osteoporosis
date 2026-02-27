@@ -6,6 +6,29 @@ library(pheatmap)
 library(ggplot2)
 library(msigdbr)
 
+# database ####
+
+# Reactome (CP:REACTOME)
+db_reactome <- msigdbr(species = "Mus musculus") %>%
+  filter(gs_subcollection == "CP:REACTOME") %>%   # NOTE: some msigdbr versions use gs_subcat; others use gs_subcollection
+  transmute(term = gs_name, gene = gene_symbol) %>%
+  distinct()
+db_go <- msigdbr(species = "Mus musculus") %>%
+  filter(gs_subcollection == "GO:BP") %>%   # NOTE: some msigdbr versions use gs_subcat; others use gs_subcollection
+  transmute(term = gs_name, gene = gene_symbol) %>%
+  distinct()
+db_kegg <- msigdbr(species = "Mus musculus") %>%
+  filter(gs_subcollection == "CP:KEGG") %>%
+  transmute(term = gs_name, gene = gene_symbol) %>%
+  distinct()
+db_kegg <- msigdbr(species = "Mus musculus", category = "C2", subcollection = "CP:KEGG_LEGACY") %>%
+  transmute(term = gs_name, gene = gene_symbol) %>%
+  distinct()
+# Hallmark (H)
+db_hallmark <- msigdbr(species = "Mus musculus", category = "H") %>%
+  transmute(term = gs_name, gene = gene_symbol) %>%
+  distinct()
+
 # Functions ####
 
 plot_heatmap_original_rings <- function(res, top_n = 40, scale_rows = TRUE) {
@@ -74,8 +97,8 @@ plot_heatmap_original_rings <- function(res, top_n = 40, scale_rows = TRUE) {
 
 volcano_shift <- function(res, GOIs = character(), filename = NULL,
                           top_pct = 0.05,            # top 5% |logFC| defines vertical cutoffs
-                          pval_sig = 0.01,           # "UP/DOWN" threshold
-                          pval_sug = 0.05,           # "SUGGESTIVE" threshold (dashed line shown)
+                          pval_sig = 0.01,           # "UP/DOWN" adjusted p value threshold,
+                          pval_sug = 0.05,           # "SUGGESTIVE" pvalue (not adjusted) threshold (dashed line shown)
                           use_adj_for_y = FALSE,     # use adj.P.Val on y-axis if TRUE
                           force = 1.5,
                           force_pull = 0.5,
@@ -134,7 +157,7 @@ volcano_shift <- function(res, GOIs = character(), filename = NULL,
     geom_vline(xintercept = c(-thr, thr), linetype = "dashed", col = "black") +
     geom_hline(yintercept = -log10(pval_sug), linetype = "dashed", col = "black") +
     geom_label_repel(
-      data = tt %>% filter(DEG != "NO" & gene %in% genes_to_label),
+      data = tt %>% filter(gene %in% genes_to_label),
       aes(label = gene),
       label.size = 0,
       force = force,
@@ -236,26 +259,7 @@ gl_shape_unsigned <- sort(gl_shape_unsigned, decreasing = TRUE)
 
 # ---- 1) TERM2GENE: Reactome + Hallmark (mouse) ----
 
-# Reactome (CP:REACTOME)
-db_reactome <- msigdbr(species = "Mus musculus") %>%
-  filter(gs_subcollection == "CP:REACTOME") %>%   # NOTE: some msigdbr versions use gs_subcat; others use gs_subcollection
-  transmute(term = gs_name, gene = gene_symbol) %>%
-  distinct()
-db_go <- msigdbr(species = "Mus musculus") %>%
-  filter(gs_subcollection == "GO:BP") %>%   # NOTE: some msigdbr versions use gs_subcat; others use gs_subcollection
-  transmute(term = gs_name, gene = gene_symbol) %>%
-  distinct()
-db_kegg <- msigdbr(species = "Mus musculus") %>%
-  filter(gs_subcollection == "CP:KEGG") %>%
-  transmute(term = gs_name, gene = gene_symbol) %>%
-  distinct()
-db_kegg <- msigdbr(species = "Mus musculus", category = "C2", subcollection = "CP:KEGG_LEGACY") %>%
-  transmute(term = gs_name, gene = gene_symbol) %>%
-  distinct()
-# Hallmark (H)
-db_hallmark <- msigdbr(species = "Mus musculus", category = "H") %>%
-  transmute(term = gs_name, gene = gene_symbol) %>%
-  distinct()
+
 
 # Choose one mapping to run (set to db_reactome or db_hallmark)
 TERM2GENE_use <- db_reactome   # change to db_hallmark if you want Hallmark
@@ -282,11 +286,16 @@ gsea_shift <- GSEA(
 
 # ---- 3) Dotplots ----
 gsea_shape@result %>% filter(p.adjust < 0.05) %>% pull(Description)
-p_shape <- dotplot(gsea_shape , showCategory = 20) +
+p_shape <- dotplot(gsea_shape , showCategory = 10) +
   theme_classic() +
   labs(title = "GSEA (SHAPE): spatial pattern changes")
 
-p_shift <- dotplot(gsea_shift, showCategory = 20, split = ".sign") + # split=".sign" separates positive vs negative NES.
+cats <- c("REACTOME_ERYTHROCYTES_TAKE_UP_CARBON_DIOXIDE_AND_RELEASE_OXYGEN",
+  "REACTOME_CELL_CYCLE_MITOTIC", "REACTOME_CELLULAR_SENESCENCE",
+  "REACTOME_SIGNALING_BY_NOTCH", "REACTOME_SIGNALING_BY_WNT")
+
+
+p_shift <- dotplot(gsea_shift, showCategory = 10, split = ".sign") + # split=".sign" separates positive vs negative NES.
   facet_grid(. ~ .sign) +
   theme_classic() +
   labs(title = "GSEA (SHIFT): overall expression difference")
@@ -295,24 +304,37 @@ gsea_shift@result %>% filter(p.adjust < 0.05) %>% pull(Description)
 p_shape
 p_shift
 
-pathway_name <- "HALLMARK_WNT_BETA_CATENIN_SIGNALING"  # adjust to your exact term
-pathway_name <- "HALLMARK_NOTCH_SIGNALING"  # adjust to your exact term
+pathway_name <- "REACTOME_SIGNALING_BY_WNT"  # adjust to your exact term
 
-gsea_shape@result %>% filter(Description == pathway_name) %>% pull(core_enrichment)
-
-
-le <- gsea_shape@result$leading_edge[fg$pathway == pathway_name][[1]]
-le
+le_string <- gsea_shift@result$core_enrichment[
+  gsea_shape@result$Description == pathway_name
+]
+genes <- strsplit(le_string, "/")[[1]]
 
 # Shift Volcano ####
-shift_volcano <- volcano_shift(res, GOIs = c("Wnt1","Col1a2", "Runx2", "Sost", "Dmp1", "Col1a1"),
-                               top_pct = 0.05, pval_sug = 0.05, lim = F, force_pull = 10, max.overlaps = 20)
 
+gois <- c("Wnt1","Col1a2", "Col1a1", "Runx2", "Sost", "Dmp1", "Col1a1", "Mmp9",
+  "Bglap", 'Lrp5')
+osteoblast_genes <- c(
+  "Runx2",
+  "Sp7",
+  "Alpl",
+  "Col1a1",
+  "Ibsp",
+  "Bglap",
+  "Spp1",
+  "Dmp1",
+  "Sost"
+)
+shift_volcano <- volcano_shift(res, GOIs = union(osteoblast_genes, gois), n_label = 5,
+                               top_pct = 0.05, pval_sug = 0.05, lim = F,
+                               force_pull = 10, max.overlaps = 20,)
+shift_volcano
 # Shape heatmap ####
-plot_heatmap_original_rings(res, top_n = 50, scale_rows = TRUE)
+plot_heatmap_original_rings(res, top_n = 75, scale_rows = TRUE)
 
 # DistPlots (specific genes) ####
-gene <- "Wnt1"
+gene <- "Mmp9"
 res$shape[gene,]
 res$shift[gene,]
 SpatialFeaturePlot(dd.norm, features = gene, alpha = c(0,3))
@@ -320,3 +342,4 @@ cur <- predict_gene_curves(res, gene)
 pp <- plot_spline_curves(cur, gene)
 pp$curves
 pp$diff
+

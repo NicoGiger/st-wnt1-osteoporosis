@@ -131,16 +131,12 @@ SpatialFeaturePlot(dd, features = 'nFeature_Spatial', max.cutoff = 3000)
 dd.norm <- SCT2_norm(dd) #Sample-wise SCT normalization
 
 # Rings ####
-dd.norm <- build_numeric_rings(dd.norm, nrings = 50)
-#SpatialFeaturePlot(dd.norm, features = 'ring')
-SpatialFeaturePlot(dd.norm, features = "ring") +
-  scale_fill_viridis_c(
-    option = "magma",
-    trans = "sqrt",
-    direction = -1
-  )
+nrings <- 15
+dd.norm <- build_numeric_rings(dd.norm, nrings = nrings)
+dd.norm <- subset(dd.norm, ring < nrings)
 
-SpatialFeaturePlot(temp, features = "ring") +
+#SpatialFeaturePlot(dd.norm, features = 'ring')
+SpatialFeaturePlot(dd.norm, features = "ring", crop = F) +
   scale_fill_viridis_c(
     option = "magma",
     trans = "sqrt",

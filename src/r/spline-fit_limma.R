@@ -185,21 +185,28 @@ ring_spline_limma_abs <- function(
 }
 
 
-res <- ring_spline_limma_abs(
-  seu_wt, seu_oe,
-  ring_col="ring",
-  assay="SCT", layer="data",
-  nbins=10, spline_df=6,
-  perc_filter=0.01
-)
 
 
 # Example
-
 dd.norm_split <- SplitObject(dd.norm, split.by = "group")
 seu_wt <- dd.norm_split$Wt
 seu_oe <- dd.norm_split$WntOverExp
+colnames(seu_oe) %>% length() #519
+colnames(seu_wt) %>% length() #351
 res <- ring_spline_limma_abs(seu_wt, seu_oe, ring_col="ring",
-                            assay="SCT", layer="data", nbins=NULL, spline_df=6,
-                            max_rings = 10, perc_filter = 0.05)
-
+                            assay="SCT", layer="data", nbins=NULL, spline_df=14,
+                            max_rings = 16, perc_filter = 0.05)
+perc1 <- res$shape %>% rownames()
+Genes_in <- c('Wnt1', 'Sost', 'Runx2', 'Col1a1', 'Col1a2', 'Fzd10', 'Fzd4', 'Fzd1', 'Fzd7', 'Fzd9', 'Lrp5', 'Lrp6')
+Genes_in %in% perc1
+#temp <- FindSpatiallyVariableFeatures(seu_wt, assay = 'SCT', selection.method = 'moransi', nfeatures = 3000)
+#temp_oe <- FindSpatiallyVariableFeatures(seu_oe, assay = 'SCT', selection.method = 'moransi', nfeatures = 3000)
+#temp_union <- union(SpatiallyVariableFeatures(temp), SpatiallyVariableFeatures(temp_oe))
+#genes_filtered <- union(perc1, temp_union)
+#
+#Genes_in %in% perc1
+#Genes_in %in% temp_union
+#Genes_in %in% genes_filtered
+#
+#
+#
