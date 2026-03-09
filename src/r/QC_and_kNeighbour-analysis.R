@@ -62,31 +62,7 @@ SCT2_norm <- function(data, split.by = "group", assay ="Spatial",
   return(merged)
 }
 
-k_neighbor_spots <- function(dd, k) {
-  target_spots <- dd@meta.data %>% filter(spa == 'TrabBone') %>% rownames()
-  Cavity_spots <- dd@meta.data %>% filter(spa == 'Cavity') %>% rownames()
 
-  coords <- GetTissueCoordinates(dd)
-  coords_mat <- as.matrix(coords[, c("x", "y")])
-  spot_names <- rownames(coords_mat)
-
-  nn <- get.knn(coords_mat, k = k)
-  target_indices <- match(target_spots, spot_names)
-
-  # Collect all neighbors for these spots
-  neighbor_indices <- unique(as.vector(nn$nn.index[target_indices, ]))
-  neighbor_spots <- spot_names[neighbor_indices]
-
-  # Remove self-matches and spots defined in other tissues
-  neighbor_spots <- setdiff(neighbor_spots, target_spots)
-  neighbor_spots <- intersect(neighbor_spots, Cavity_spots)
-
-  # Add trab neighbors to meta.data
-  dd$spa[neighbor_spots] <- paste0("Trab neighbor ", k)
-
-  dd$idents <- paste(dd$spa, dd$group) #add idents
-  return(dd)
-}
 scran_DESeq_DGE <- function(obj, min_prop = 0.1){
   DefaultAssay(obj) <- "Spatial"
   cts <- GetAssayData(obj, layer = "counts")
@@ -172,10 +148,12 @@ spa <- read.csv(path.spa, stringsAsFactors = F, header = T, row.names = 1) #load
 dd <- AddMetaData(dd, spa) # add metadata
 dd <- dd %>% subset(!(spa %in% c('out', 'Undefined', 'CortBone', 'GP', 'TrabBone2')) &
                       nCount_Spatial > 250)
-SpatialFeaturePlot(dd, features = 'nFeature_Spatial', max.cutoff = 3000)
+SpatialFeaturePlot(dd, features = 'nCount_Spatial', max.cutoff = 3000)
+VlnPlot(dd, features = 'nCount_Spatial', group.by = 'spa', log = T)
+SpatialDimPlot(dd, group.by = 'spa')
 
 #Sample-wise SCT normalization
-dd.norm <- SCT2_norm(dd)
+dd.norm <- SCT2_norm(dd, )
 
 
 #Determine Trabecular bone neighbouring spots
@@ -204,7 +182,7 @@ dd.norm <- FindNeighbors(dd.norm)
 dd.norm <- FindClusters(dd.norm, resolution = 0.7, algorithm = 4)
 dd.norm <- RunTSNE(dd.norm, reduction = 'pca')
 DimPlot(dd.norm)
-SpatialDimPlot(dd.norm, alpha = 0.5)
+SpatialDimPlot(dd.norm)
 
 
 # Scran Deseq
