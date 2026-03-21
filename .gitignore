@@ -49,8 +49,8 @@ po/*~
 rsconnect/
 
 # ---- data ----
-data/raw/
-data/processed/
+data/
+
 
 # ---- results ----
 #results/
