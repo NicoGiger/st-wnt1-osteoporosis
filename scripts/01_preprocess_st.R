@@ -19,12 +19,12 @@ obj <- Load10X_Spatial(data.dir=path_in)
 obj@images$slice1@scale.factors$spot <- 6/(obj@images$slice1@scale.factors$lowres) #correct image scale
 spa <- read.csv(path_spa, stringsAsFactors=F, header=T, row.names=1) #load metadata
 obj <- AddMetaData(obj, spa) # aobj metadata
-SpatialDimPlot(obj, group.by='spa')
+
 # Add distance metrices
 
 obj <- compute_min_ref_graph_distance_by_group(obj, group_col='group',
                                                reference_label="TrabBone",
-                                               spa_col='spa', out_col="graphdist_to_TrabBone")
+                                               spa_col='spa', out_col="Trab_Dist")
 obj <- compute_min_ref_graph_distance_by_group(obj, group_col='group',
                                                reference_label="Transition",
                                                spa_col='spa', out_col="Prox_Dist")

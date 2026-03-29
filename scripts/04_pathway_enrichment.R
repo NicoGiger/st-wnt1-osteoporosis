@@ -110,6 +110,7 @@ write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cavity_prox_dist.
 
 saveRDS(gsea_shape, file=here("data", "gsea_shape_cavity_prox_dist.rds"))
 write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cavity_prox_dist.csv"))
+
 ##Cortex prox dist ####
 
 ##SHIFT ranking (signed)

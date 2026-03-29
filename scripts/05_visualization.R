@@ -29,7 +29,7 @@ source(here("src","r", "functions", "shape_heatmap.R"))
 
 trab_cap12 <- readRDS(path_in_cavity_trab_dist) #spline regression output
 obj_trab_cap12 <- readRDS(path_in_obj) %>%  #normalized seurat object
-  subset(spa %in% c("Cavity", "TrabBone") & graphdist_to_TrabBone<max(trab_cap12$info$dist_labels_ok)) #subset to only rings
+  subset(spa %in% c("Cavity", "TrabBone") & Trab_Dist<max(trab_cap12$info$dist_labels_ok)) #subset to only rings
 gsea_shift_trab_cap12 <- readRDS(path_in_shift_cavity_trab_dist)
 gsea_shape_trab_cap12 <- readRDS(path_in_shape_cavity_trab_dist)
 
@@ -53,7 +53,6 @@ res <- trab_cap12
 obj <- obj_trab_cap12
 gsea_shift <- gsea_shift_trab_cap12
 gsea_shape <- gsea_shape_trab_cap12
-dist_col <- "graphdist_to_TrabBone"
 path_out <- here("results", "figures", "cavity_trab_dist")
 
 GOIs <- c("Wnt1","Mmp9", "Col1a2")
@@ -72,7 +71,7 @@ ggsave(plot=venn_plt, filename= 'venn_plot.png',
 ##spline plots
 for (gene in GOIs){
   spline_plt <- spline_fit_plt(res, obj_wt, obj_oe, gene=gene,
-                                        dist_col='graphdist_to_TrabBone')
+                                        dist_col=dist_col)
   ggsave(plot=spline_plt, filename=paste0(gene,"spline-fit.png"),
          path=path_out, dpi=300, width=6, height=3)
 

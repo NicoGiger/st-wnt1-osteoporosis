@@ -1,1 +1,2 @@
-"";"ID";"Description";"setSize";"enrichmentScore";"NES";"pvalue";"p.adjust";"qvalue"
+"";"ID";"Description";"setSize";"enrichmentScore";"NES";"pvalue";"p.adjust";"qvalue";"rank";"leading_edge";"core_enrichment"
+"HALLMARK_E2F_TARGETS";"HALLMARK_E2F_TARGETS";"HALLMARK_E2F_TARGETS";180;-0,357616138746383;-1,58200134622001;0,000900320512753584;0,0450160256376792;0,0407513495246359;3631;"tags=31%, list=19%, signal=25%";"Prdx4/Pnn/Rad21/Cse1l/H2az1/Suv39h1/H2ax/Myc/Ing3/Gins3/Ccne1/Dscc1/Naa38/Cdkn2c/Plk4/Msh2/Cdkn1b/Dek/Mki67/Zw10/Pds5b/Rnaseh2a/Wee1/Cdca8/Gins1/Ung/Hmmr/Cdkn3/Rad1/Mms22l/Ddx39a/Ipo7/Pttg1/Nup205/Ubr7/Ezh2/Pola2/Srsf2/Nup107/Rad50/Cdk4/Hmgb3/Mre11a/Tfrc/Mthfd2/Cdca3/Mcm4/Exosc8/Wdr90/Brca1/Tmpo/Rpa3/Anp32e/Slbp/Dut/Ak2"

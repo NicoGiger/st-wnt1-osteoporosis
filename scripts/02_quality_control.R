@@ -33,7 +33,8 @@ ggsave(plot=counts_spatial, filename="counts_spatial.png",
        path=here("results", "figures"), dpi=300, width=6, height=3)
 
 counts_violine <- VlnPlot(obj, features='nCount_Spatial', log=T,
-                          group.by='spa', split.by="group", ) +
+                          group.by='spa', split.by="group", cols = c('Control OVX'=seurat_cols[2],
+                                                                    'Wnt1tg OVX'=seurat_cols[1]))+
   theme(axis.text.x=element_text(angle=0, hjust=0.5))
 ggsave(plot=counts_violine, filename="counts_violine.png",
        path=here("results", "figures"), dpi=300, width=6, height=3)
@@ -43,29 +44,30 @@ ggsave(plot=features_spatial, filename="features_spatial.png",
        path=here("results", "figures"), dpi=300, width=6, height=3)
 
 features_violine <- VlnPlot(obj, features='nFeature_Spatial', log=T,
-                            group.by='spa', split.by='group') +
+                            group.by='spa', split.by='group', cols = c('Control OVX'=seurat_cols[2],
+                                                                       'Wnt1tg OVX'=seurat_cols[1])) +
   theme(axis.text.x=element_text(angle=0, hjust=0.5))
 ggsave(plot=features_violine, filename="features_violine.png",
        path=here("results", "figures"), dpi=300, width=6, height=3)
 
 
 # Trabecular distances in Cavity
-spatial_trab_dist <- SpatialFeaturePlot(Cavity, features="graphdist_to_TrabBone") +
+spatial_trab_dist <- SpatialFeaturePlot(Cavity, features="Trab_Dist") +
   scale_fill_viridis_c(option='magma', direction=-1, trans='sqrt')
 ggsave(plot=spatial_trab_dist, filename="spatial_trab_dist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
-spots_per_trab_dist <- plot_spots_per_gdist(Cavity, ring_col="graphdist_to_TrabBone")
+spots_per_trab_dist <- plot_spots_per_gdist(Cavity, ring_col="Trab_Dist")
 ggsave(plot=spots_per_trab_dist, filename="spots_per_trab_dist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
-nCounts_per_trab_dist <- FeatureScatter(Cavity, feature1="graphdist_to_TrabBone", feature2="nCount_Spatial",
+nCounts_per_trab_dist <- FeatureScatter(Cavity, feature1="Trab_Dist", feature2="nCount_Spatial",
                                    split.by="group", group.by="group", plot.cor=F, log=F) +
   scale_color_manual(values=seurat_cols)
 ggsave(plot=nCounts_per_trab_dist, filename="nCounts_per_trab_dist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
-nFeature_per_trab_dist <- FeatureScatter(Cavity, feature1="graphdist_to_TrabBone", feature2="nFeature_Spatial",
+nFeature_per_trab_dist <- FeatureScatter(Cavity, feature1="Trab_Dist", feature2="nFeature_Spatial",
                                    split.by="group", group.by="group", plot.cor=F, log=F) +
   scale_color_manual(values=seurat_cols)
 ggsave(plot=nFeature_per_trab_dist, filename="nFeature_per_trab_dist.png",
