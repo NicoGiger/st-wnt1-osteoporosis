@@ -27,6 +27,8 @@ Cavity_trab_dist_reg <- spline_limma_abs(Cavity_K12_split$`Control OVX`, Cavity_
                         max_dist=K-1, spline_df=6) # K-1: trabecular Bone is distance 0
 
 saveRDS(Cavity_trab_dist_reg, file=here("data", "Cavity_trab_dist_reg.rds"))
+write.csv2(Cavity_trab_dist_reg$shift, file=here("results", "shift_cavity_trab_dist.csv"))
+write.csv2(Cavity_trab_dist_reg$shape, file=here("results", "shape_cavity_trab_dist.csv"))
 
 
 # Prox_dist in Cavity
@@ -39,16 +41,18 @@ Cavity_prox_dist_reg <- spline_limma_abs(Cavity_split$`Control OVX`, Cavity_spli
                         max_dist=K, spline_df=4) # K-1: trabecular Bone is distance 0
 
 saveRDS(Cavity_prox_dist_reg, file=here("data", "Cavity_prox_dist_reg.rds"))
+write.csv2(Cavity_prox_dist_reg$shift, file=here("results", "shift_cavity_prox_dist.csv"))
+write.csv2(Cavity_prox_dist_reg$shape, file=here("results", "shape_cavity_prox_dist.csv"))
 
 # Prox_dist in CortBone
 CortBone_split <- SplitObject(CortBone, split.by="group")
 K <- 50
-CortBone_trab_dist_reg <- spline_limma_abs(CortBone_split$`Control OVX`, CortBone_split$`Wnt1tg OVX`,
+CortBone_prox_dist_reg <- spline_limma_abs(CortBone_split$`Control OVX`, CortBone_split$`Wnt1tg OVX`,
                         dist_col="Prox_Dist", assay="SCT", nbins=9,
                         layer="data", perc_filter=perc_filter,
                         filter_assay="Spatial", filter_layer="counts",
                         max_dist=K, spline_df=4)
-saveRDS(CortBone_trab_dist_reg, file=here("data", "CortBone_prox_dist_reg.rds"))
-
-
+saveRDS(CortBone_prox_dist_reg, file=here("data", "CortBone_prox_dist_reg.rds"))
+write.csv2(CortBone_prox_dist_reg$shift, file=here("results", "shift_cortBone_prox_dist.csv"))
+write.csv2(CortBone_prox_dist_reg$shape, file=here("results", "shape_cortBone_prox_dist.csv"))
 

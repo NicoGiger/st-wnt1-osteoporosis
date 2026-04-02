@@ -1,0 +1,17 @@
+name: spatialdm
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10
+  - pip
+  - numpy
+  - pandas
+  - scipy=1.11.4
+  - matplotlib
+  - scanpy
+  - squidpy
+  - anndata=0.10.8
+  - pip:
+      - git+https://github.com/StatBiomed/SpatialDM
+      - SparseAEH

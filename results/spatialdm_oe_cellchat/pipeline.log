@@ -1,0 +1,11 @@
+2026-04-02 12:19:02,584 | INFO | SpatialDM version: 0.3.1
+2026-04-02 12:19:02,585 | INFO | Loading Visium data from /media/p_drive/Ulm/Wnt/
+2026-04-02 12:19:03,002 | INFO | Joined group annotations from metadata/spa.csv
+2026-04-02 12:19:03,002 | INFO | Group counts:
+group
+Wnt1tg OVX     1405
+Control OVX    1233
+2026-04-02 12:19:03,006 | INFO | Subset section 'Wnt1tg OVX': 1405 spots, 25906 genes
+2026-04-02 12:19:03,009 | INFO | Filtering genes with min_counts >= 3
+2026-04-02 12:19:03,026 | INFO | Normalizing to target_sum=10000.0 and log1p transforming
+2026-04-02 12:19:04,313 | INFO | Extracting LR pairs from CellChatDB for species=mouse

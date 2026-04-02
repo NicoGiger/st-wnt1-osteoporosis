@@ -5,7 +5,7 @@ source(here("src","r","libraries.R"))
 
 # Paths ####
 path_in <- "/media/p_drive/Ulm/Wnt/"
-path_spa <- here("metadata", "spa.csv")
+# path_spa <- here("metadata", "spa.csv")
 
 
 # Functions
@@ -18,7 +18,11 @@ obj <- Load10X_Spatial(data.dir=path_in)
 
 obj@images$slice1@scale.factors$spot <- 6/(obj@images$slice1@scale.factors$lowres) #correct image scale
 spa <- read.csv(path_spa, stringsAsFactors=F, header=T, row.names=1) #load metadata
-obj <- AddMetaData(obj, spa) # aobj metadata
+obj <- AddMetaData(obj, spa) #  add obj metadata
+obj$group <- factor(obj$group, levels = c("Control OVX", "Wnt1tg OVX")) #specicy factor levels
+
+Cavity <- obj %>% subset(spa %in% c("Cavity", "TrabBone"))
+CortBone <- obj %>% subset(spa=='CortBone')
 
 # Add distance metrices
 

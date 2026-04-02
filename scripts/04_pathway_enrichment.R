@@ -29,21 +29,21 @@ db_hallmark <- msigdbr(species="Mus musculus", collection="H") %>%
 
 # Main
 
-##Cavity trab dist ######
-##SHIFT ranking (signed)
+## Cavity trab dist ######
+## SHIFT ranking (signed)
 res <- cavity_trab_dist
 gl_shift <- res$shift$t
 names(gl_shift) <- rownames(res$shift)
 gl_shift <- gl_shift[is.finite(gl_shift)]
 gl_shift <- sort(gl_shift, decreasing=TRUE)
 
-##SHAPE ranking (unsigned)
+## SHAPE ranking (unsigned)
 gl_shape_unsigned <- res$shape$F
 names(gl_shape_unsigned) <- rownames(res$shape)
 gl_shape_unsigned <- gl_shape_unsigned[is.finite(gl_shape_unsigned)]
 gl_shape_unsigned <- sort(gl_shape_unsigned, decreasing=TRUE)
 
-# Run gsea
+## Run gsea
 TERM2GENE_use <- db_hallmark
 
 gsea_shape <- GSEA(
@@ -62,7 +62,7 @@ gsea_shift <- GSEA(
   seed=TRUE,
   nPermSimple=10000)
 
-#save data
+## save data
 saveRDS(gsea_shift, file=here("data", "gsea_shift_cavity_trab_dist.rds"))
 write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cavity_trab_dist.csv"))
 
@@ -70,22 +70,22 @@ saveRDS(gsea_shape, file=here("data", "gsea_shape_cavity_trab_dist.rds"))
 write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cavity_trab_dist.csv"))
 
 
-##Cavity prox dist ######
+## Cavity prox dist ######
 
-##SHIFT ranking (signed)
+## SHIFT ranking (signed)
 res <- cavity_prox_dist
 gl_shift <- res$shift$t
 names(gl_shift) <- rownames(res$shift)
 gl_shift <- gl_shift[is.finite(gl_shift)]
 gl_shift <- sort(gl_shift, decreasing=TRUE)
 
-##SHAPE ranking (unsigned)
+## SHAPE ranking (unsigned)
 gl_shape_unsigned <- res$shape$F
 names(gl_shape_unsigned) <- rownames(res$shape)
 gl_shape_unsigned <- gl_shape_unsigned[is.finite(gl_shape_unsigned)]
 gl_shape_unsigned <- sort(gl_shape_unsigned, decreasing=TRUE)
 
-# Run gsea
+## Run gsea
 TERM2GENE_use <- db_hallmark
 
 gsea_shape <- GSEA(
@@ -104,29 +104,29 @@ gsea_shift <- GSEA(
   seed=TRUE,
   nPermSimple=10000)
 
-#save data
+## save data
 saveRDS(gsea_shift, file=here("data", "gsea_shift_cavity_prox_dist.rds"))
 write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cavity_prox_dist.csv"))
 
 saveRDS(gsea_shape, file=here("data", "gsea_shape_cavity_prox_dist.rds"))
 write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cavity_prox_dist.csv"))
 
-##Cortex prox dist ####
+## Cortex prox dist ####
 
-##SHIFT ranking (signed)
+## SHIFT ranking (signed)
 res <- cortBone_prox_dist
 gl_shift <- res$shift$t
 names(gl_shift) <- rownames(res$shift)
 gl_shift <- gl_shift[is.finite(gl_shift)]
 gl_shift <- sort(gl_shift, decreasing=TRUE)
 
-##SHAPE ranking (unsigned)
+## SHAPE ranking (unsigned)
 gl_shape_unsigned <- res$shape$F
 names(gl_shape_unsigned) <- rownames(res$shape)
 gl_shape_unsigned <- gl_shape_unsigned[is.finite(gl_shape_unsigned)]
 gl_shape_unsigned <- sort(gl_shape_unsigned, decreasing=TRUE)
 
-# Run gsea
+## Run gsea
 TERM2GENE_use <- db_hallmark
 
 gsea_shape <- GSEA(
@@ -145,7 +145,7 @@ gsea_shift <- GSEA(
   seed=TRUE,
   nPermSimple=10000)
 
-#save data
+## save data
 saveRDS(gsea_shift, file=here("data", "gsea_shift_cortBone_prox_dist.rds"))
 write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cortBone_prox_dist.csv"))
 

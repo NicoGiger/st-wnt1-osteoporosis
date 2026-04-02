@@ -3,17 +3,17 @@ library(here)
 source(here("src","r","libraries.R"))
 
 # Paths
-##Seurat object
+## Seurat object
 path_in_obj <- here("data", "preprocessed_obj.rds")
-##Cavity trab dist
+## Cavity trab dist
 path_in_cavity_trab_dist <- here("data", "Cavity_trab_dist_reg.rds")
 path_in_shift_cavity_trab_dist<- here("data", "gsea_shift_cavity_trab_dist.rds")
 path_in_shape_cavity_trab_dist <- here("data", "gsea_shape_cavity_trab_dist.rds")
-##Cavity prox dist
+## Cavity prox dist
 path_in_cavity_prox_dist <- here("data", "Cavity_prox_dist_reg.rds")
 path_in_shift_cavity_prox_dist <- here("data", "gsea_shift_cavity_prox_dist.rds")
 path_in_shape_cavity_prox_dist <- here("data", "gsea_shape_cavity_prox_dist.rds")
-##CortBone prox dist
+## CortBone prox dist
 path_in_cortBone_prox_dist <- here("data", "CortBone_prox_dist_reg.rds")
 path_in_shift_cortBone_prox_dist <- here("data", "gsea_shift_cortBone_prox_dist.rds")
 path_in_shape_cortBone_prox_dist <- here("data", "gsea_shape_cortBone_prox_dist.rds")
@@ -25,7 +25,7 @@ source(here("src","r", "functions", "shape_heatmap.R"))
 
 
 # Data
-##Cavity trab dist
+## Cavity trab dist
 
 trab_cap12 <- readRDS(path_in_cavity_trab_dist) #spline regression output
 obj_trab_cap12 <- readRDS(path_in_obj) %>%  #normalized seurat object
@@ -33,22 +33,23 @@ obj_trab_cap12 <- readRDS(path_in_obj) %>%  #normalized seurat object
 gsea_shift_trab_cap12 <- readRDS(path_in_shift_cavity_trab_dist)
 gsea_shape_trab_cap12 <- readRDS(path_in_shape_cavity_trab_dist)
 
-##Cavity prox dist
+## Cavity prox dist
 trab_bin12 <- readRDS(path_in_cavity_prox_dist) #spline regression output
 obj_trab_bin12 <- readRDS(path_in_obj) %>%  #normalized seurat object
   subset(spa %in% c("Cavity", "TrabBone")) #subset to only rings
 gsea_shift_trab_bin12 <- readRDS(path_in_shift_cavity_prox_dist)
 gsea_shape_trab_bin12 <- readRDS(path_in_shape_cavity_prox_dist)
 
-##CortBone prox dist
+## CortBone prox dist
 prox_cortBone <- readRDS(path_in_cortBone_prox_dist) #spline regression output
 obj_cortBone <- readRDS(path_in_obj) %>%  #normalized seurat object
   subset(spa %in% c("CortBone")) #subset to only rings
 gsea_shift_prox_cortBone <- readRDS(path_in_shift_cortBone_prox_dist)
 gsea_shape_prox_cortBone <- readRDS(path_in_shape_cortBone_prox_dist)
 
-##### Cavity trab dist Plots ####
-# Plot individual genes of interest (GOIs)
+# Main
+## Cavity trab dist Plots ####
+## Plot individual genes of interest (GOIs)
 res <- trab_cap12
 obj <- obj_trab_cap12
 gsea_shift <- gsea_shift_trab_cap12
@@ -56,19 +57,20 @@ gsea_shape <- gsea_shape_trab_cap12
 path_out <- here("results", "figures", "cavity_trab_dist")
 
 GOIs <- c("Wnt1","Mmp9", "Col1a2")
+dist_col <- "Trab_Dist"
 
 obj_splitted <- obj %>% SplitObject(split.by='group') #split into experimental groups
 obj_wt <- obj_splitted$`Control OVX`
 obj_oe <- obj_splitted$`Wnt1tg OVX`
 
 
-##Venn Diagrams
+## Venn Diagrams
 sets <- res$filter$sets
 venn_plt <- make_filter_ggvenn(sets)
 ggsave(plot=venn_plt, filename= 'venn_plot.png',
        path=path_out, dpi=300, width=6, height=3)
 
-##spline plots
+## Spline plots
 for (gene in GOIs){
   spline_plt <- spline_fit_plt(res, obj_wt, obj_oe, gene=gene,
                                         dist_col=dist_col)
@@ -81,18 +83,18 @@ for (gene in GOIs){
          path=path_out, dpi=300, width=6, height=3)
 }
 
-# Shift volcano
+## Shift volcano
 shift_volcano_plt <- shift_volcano(res, GOIs=GOIs, top_pct=0.1, pval_sig=0.1)
 ggsave(plot=shift_volcano_plt, filename="shift_volcano_cavity_trab_dist.png",
        path=path_out, dpi=300, width=6, height=3)
-# Shape heatmap
+## Shape heatmap
 shape_heatmap_plt <- shape_heatmap(res, top_n=50, scale_rows=TRUE)
 ggsave(plot=shape_heatmap_plt, filename="shape_heatmap_cavity_trab_dist.png",
        path=path_out, dpi=300, width=12, height=6)
 
-# GSEA dotplots
+## GSEA dotplots
 if (gsea_shift@result %>% nrow() != 0){
-  shift_dotplot <- dotplot(gsea_shift, split=".sign") + # split=".sign" separates positive vs negative NES.
+  shift_dotplot <- dotplot(gsea_shift, split=".sign") + #split=".sign" separates positive vs negative NES.
     facet_grid(. ~ .sign) +
     theme_classic() +
     labs(title="GSEA (SHIFT): overall expression difference")
@@ -109,7 +111,7 @@ if (gsea_shape@result %>% nrow() != 0){
 }
 
 
-##### Cavity prox dist Plots ####
+## Cavity prox dist Plots ####
 
 res <- trab_bin12
 obj <- obj_trab_bin12
@@ -120,7 +122,7 @@ path_out <- here("results", "figures", "cavity_prox_dist")
 
 GOIs <- c("Wnt1","Mmp9", "Col1a2")
 
-##Venn Diagrams
+## Venn Diagrams
 sets <- res$filter$sets
 venn_plt <- make_filter_ggvenn(sets)
 ggsave(plot=venn_plt, filename= 'venn_plot.png',
@@ -142,18 +144,18 @@ for (gene in GOIs){
          path=path_out, dpi=300, width=6, height=3)
 }
 
-# Shift volcano
+## Shift volcano
 shift_volcano_plt <- shift_volcano(res, GOIs=GOIs, top_pct=0.1, pval_sig=0.1)
 ggsave(plot=shift_volcano_plt, filename="shift_volcano_cavity_prox_dist.png",
        path=path_out, dpi=300, width=6, height=3)
-# Shape heatmap
+## Shape heatmap
 shape_heatmap_plt <- shape_heatmap(res, top_n=50, scale_rows=TRUE)
 ggsave(plot=shape_heatmap_plt, filename="shape_heatmap_cavity_prox_dist.png",
        path=path_out, dpi=300, width=12, height=6)
 
-# GSEA dotplots
+## GSEA dotplots
 if (gsea_shift@result %>% nrow() != 0){
-  shift_dotplot <- dotplot(gsea_shift, split=".sign") + # split=".sign" separates positive vs negative NES.
+  shift_dotplot <- dotplot(gsea_shift, split=".sign") + #split=".sign" separates positive vs negative NES.
     facet_grid(. ~ .sign) +
     theme_classic() +
     labs(title="GSEA (SHIFT): overall expression difference")
@@ -169,8 +171,8 @@ if (gsea_shape@result %>% nrow() != 0){
          path=path_out, dpi=300, width=7, height=5)
 }
 
-##### Cortical Bone prox dist Plots ####
-# Plot individual genes of interest (GOIs)
+## Cortical Bone prox dist Plots ####
+## Plot individual genes of interest (GOIs)
 
 res <- prox_cortBone
 obj <- obj_cortBone
@@ -181,7 +183,7 @@ path_out <- here("results", "figures", "cortBone_prox_dist")
 
 GOIs <- c("Wnt1","Mmp9", "Col1a2")
 
-##Venn Diagrams
+## Venn Diagrams
 sets <- res$filter$sets
 venn_plt <- make_filter_ggvenn(sets)
 ggsave(plot=venn_plt, filename= 'venn_plot.png',
@@ -203,18 +205,18 @@ for (gene in GOIs){
          path=path_out, dpi=300, width=6, height=3)
 }
 
-# Shift volcano
+## Shift volcano
 shift_volcano_plt <- shift_volcano(res, GOIs=GOIs, top_pct=0.1, pval_sig=0.1)
 ggsave(plot=shift_volcano_plt, filename="shift_volcano_cortBone_prox_dist.png",
        path=path_out, dpi=300, width=6, height=3)
-# Shape heatmap
+## Shape heatmap
 shape_heatmap_plt <- shape_heatmap(res, top_n=50, scale_rows=TRUE)
 ggsave(plot=shape_heatmap_plt, filename="shape_heatmap_cortBone_prox_dist.png",
        path=path_out, dpi=300, width=12, height=6)
 
-# GSEA dotplots
+## GSEA dotplots
 if (gsea_shift@result %>% nrow() != 0){
-  shift_dotplot <- dotplot(gsea_shift, split=".sign") + # split=".sign" separates positive vs negative NES.
+  shift_dotplot <- dotplot(gsea_shift, split=".sign") + #split=".sign" separates positive vs negative NES.
     facet_grid(. ~ .sign) +
     theme_classic() +
     labs(title="GSEA (SHIFT): overall expression difference")
