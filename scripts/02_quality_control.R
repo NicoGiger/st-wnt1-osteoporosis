@@ -13,7 +13,7 @@ source(here("src","r", "functions", "plot_spots_per_gdist.R"))
 
 # Load data
 obj <- readRDS(path_in)
-obj$group %>% unique()
+
 # QC plots
 plt_groups_annotations <- SpatialDimPlot(obj, group.by='group',
                                          cols = c('ctl OVX'=seurat_cols[1],
