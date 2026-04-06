@@ -7,12 +7,12 @@ observed_dist_means <- function(seu_wt, seu_oe, gene,
   if (!gene %in% rownames(Xw) || !gene %in% rownames(Xo)) stop("Gene not found: ", gene)
 
   df_wt <- data.frame(
-    group = "Control OVX",
+    group = "ctl OVX",
     dist  = seu_wt[[dist_col]][, 1],
     y     = as.numeric(Xw[gene, ])
   )
   df_oe <- data.frame(
-    group = "Wnt1tg OVX",
+    group = "Wnt1 OVX",
     dist  = seu_oe[[dist_col]][, 1],
     y     = as.numeric(Xo[gene, ])
   )
@@ -28,7 +28,7 @@ observed_dist_means <- function(seu_wt, seu_oe, gene,
 }
 
 plot_spline_clean <- function(curves_long, gene, obs = NULL,
-                              cols = c(`Control OVX` = "#00BFC4", `Wnt1tg OVX` = "#F8766D")) {
+                              cols = c(`ctl OVX` = "#00BFC4", `Wnt1 OVX` = "#F8766D")) {
   p <- ggplot2::ggplot(
     curves_long,
     ggplot2::aes(x = dist, y = y, color = group)
@@ -66,7 +66,7 @@ plot_spline_clean <- function(curves_long, gene, obs = NULL,
     p <- p +
       ggplot2::geom_point(
         data = obs,
-        position = position_dodge(width = 0.4),
+        pfosition = position_dodge(width = 0.4),
         ggplot2::aes(x = dist, y = y_obs, color = group),
         inherit.aes = FALSE,
         size = 2,
@@ -93,11 +93,11 @@ predict_gene_curves <- function(res, gene, ngrid = 200) {
   colnames(B) <- paste0("b", seq_len(ncol(B)))
 
   new_WT <- cbind(
-    data.frame(group = factor("Control OVX", levels = levels(res$meta$group)), dist = grid),
+    data.frame(group = factor("ctl OVX", levels = levels(res$meta$group)), dist = grid),
     B
   )
   new_OE <- cbind(
-    data.frame(group = factor("Wnt1tg OVX", levels = levels(res$meta$group)), dist = grid),
+    data.frame(group = factor("Wnt1 OVX", levels = levels(res$meta$group)), dist = grid),
     B
   )
 
@@ -116,8 +116,8 @@ predict_gene_curves <- function(res, gene, ngrid = 200) {
 
   wide <- data.frame(
     dist = grid,
-    "Control OVX" = as.numeric(X_WT %*% beta),
-    "Wnt1tg OVX" = as.numeric(X_OE %*% beta),
+    "ctl OVX" = as.numeric(X_WT %*% beta),
+    "Wnt1 OVX" = as.numeric(X_OE %*% beta),
     check.names = FALSE
   )
 
@@ -135,7 +135,7 @@ spline_fit_plt <- function(res, seu_wt, seu_oe, gene,
                                     dist_col = "dist",
                                     assay = "SCT", layer = "data",
                                     ngrid = 200,
-                                    cols = c(`Control OVX` = "#00BFC4", `Wnt1tg OVX` = "#F8766D")) {
+                                    cols = c(`ctl OVX` = "#00BFC4", `Wnt1 OVX` = "#F8766D")) {
   pr <- predict_gene_curves(res, gene, ngrid = ngrid)
   obs <- observed_dist_means(seu_wt, seu_oe, gene, dist_col = dist_col, assay = assay, layer = layer)
   # Restrict obs to fitted x-range (avoids points outside model range)
@@ -151,7 +151,7 @@ spline_fit_plt <- function(res, seu_wt, seu_oe, gene,
 make_filter_ggvenn <- function(
     sets,
     title = NULL,
-    fill = c(`Control OVX` = "#00BFC4", `Wnt1tg OVX` = "#F8766D"),
+    fill = c(`ctl OVX` = "#00BFC4", `Wnt1 OVX` = "#F8766D"),
     stroke_size = 0.5,
     set_name_size = 4,
     text_size = 4
@@ -162,7 +162,7 @@ make_filter_ggvenn <- function(
   }
 
   ggvenn::ggvenn(
-    list(`Control OVX` = sets$detected_wt, `Wnt1tg OVX` = sets$detected_oe),
+    list(`ctl OVX` = sets$detected_wt, `Wnt1 OVX` = sets$detected_oe),
     fill_color = unname(fill),
     stroke_size = stroke_size,
     set_name_size = set_name_size,

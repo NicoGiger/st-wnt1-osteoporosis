@@ -27,11 +27,11 @@ shape_heatmap <- function(res, top_n = 40, scale_rows = TRUE) {
 
   # Get WT and OE design rows ordered by dist
   ord_wt <- unlist(lapply(dists, function(r) {
-    which(meta$group == "Control OVX" & meta$dist == r)
+    which(meta$group == "ctl OVX" & meta$dist == r)
   }))
 
   ord_oe <- unlist(lapply(dists, function(r) {
-    which(meta$group == "Wnt1tg OVX" & meta$dist == r)
+    which(meta$group == "Wnt1 OVX" & meta$dist == r)
   }))
 
   design_wt <- res$design[ord_wt, , drop = FALSE]
@@ -62,7 +62,7 @@ shape_heatmap <- function(res, top_n = 40, scale_rows = TRUE) {
   pheatmap::pheatmap(
     WT,
     scale = sc,
-    main = "Control OVX fitted (SCT residuals)",
+    main = "ctl OVX fitted (SCT residuals)",
     cluster_cols = FALSE,
     cluster_rows = FALSE,
     angle_col = 0
@@ -71,7 +71,7 @@ shape_heatmap <- function(res, top_n = 40, scale_rows = TRUE) {
   pheatmap::pheatmap(
     OE,
     scale = sc,
-    main = "Wnt1tg OVX fitted (SCT residuals)",
+    main = "Wnt1 OVX fitted (SCT residuals)",
     cluster_cols = FALSE,
     cluster_rows = FALSE,
     angle_col = 0

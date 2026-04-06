@@ -28,10 +28,10 @@ CortBone <- obj %>% subset(spa=='CortBone')
 
 obj <- compute_min_ref_graph_distance_by_group(obj, group_col='group',
                                                reference_label="TrabBone",
-                                               spa_col='spa', out_col="Trab_Dist")
+                                               spa_col='spa', out_col="Trab_gDist")
 obj <- compute_min_ref_graph_distance_by_group(obj, group_col='group',
                                                reference_label="Transition",
-                                               spa_col='spa', out_col="Prox_Dist")
+                                               spa_col='spa', out_col="Distal_gDist")
 
 obj_sub <- subset(obj, spa %in% c("Cavity", "TrabBone", "CortBone"))
 

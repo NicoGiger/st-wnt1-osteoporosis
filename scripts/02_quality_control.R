@@ -68,79 +68,79 @@ ggsave(plot=features_violine, filename="features_violine.png",
 
 # Trabecular distances in Cavity
 Cavity <- subset(obj, spa %in% c("Cavity", "TrabBone"))
-spatial_trab_dist <- SpatialFeaturePlot(Cavity, features="Trab_Dist") +
+spatial_Trab_gDist <- SpatialFeaturePlot(Cavity, features="Trab_gDist") +
   scale_fill_viridis_c(option='magma', direction=-1, trans='sqrt')
-ggsave(plot=spatial_trab_dist, filename="spatial_trab_dist.png",
+ggsave(plot=spatial_Trab_gDist, filename="spatial_Trab_gDist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
-spots_per_trab_dist <- plot_spots_per_gdist(Cavity, ring_col="Trab_Dist",
+spots_per_Trab_gDist <- plot_spots_per_gdist(Cavity, ring_col="Trab_gDist",
                                             cols = c('ctl OVX'=seurat_cols[1],
                                                      'Wnt1 OVX'=seurat_cols[2]))
-ggsave(plot=spots_per_trab_dist, filename="spots_per_trab_dist.png",
+ggsave(plot=spots_per_Trab_gDist, filename="spots_per_Trab_gDist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
 
-nCounts_per_trab_dist <- FeatureScatter(Cavity, feature1="Trab_Dist", feature2="nCount_Spatial",
+nCounts_per_Trab_gDist <- FeatureScatter(Cavity, feature1="Trab_gDist", feature2="nCount_Spatial",
                                    split.by="group", group.by="group", plot.cor=F, log=F) +
   scale_color_manual(values=seurat_cols)
-ggsave(plot=nCounts_per_trab_dist, filename="nCounts_per_trab_dist.png",
+ggsave(plot=nCounts_per_Trab_gDist, filename="nCounts_per_Trab_gDist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
-nFeature_per_trab_dist <- FeatureScatter(Cavity, feature1="Trab_Dist", feature2="nFeature_Spatial",
+nFeature_per_Trab_gDist <- FeatureScatter(Cavity, feature1="Trab_gDist", feature2="nFeature_Spatial",
                                    split.by="group", group.by="group", plot.cor=F, log=F) +
   scale_color_manual(values=seurat_cols)
-ggsave(plot=nFeature_per_trab_dist, filename="nFeature_per_trab_dist.png",
+ggsave(plot=nFeature_per_Trab_gDist, filename="nFeature_per_Trab_gDist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
 
 
 # Prox distances in Cavity
-spatial_prox_dist <- SpatialFeaturePlot(Cavity, features="Prox_Dist") +
+spatial_Distal_gDist <- SpatialFeaturePlot(Cavity, features="Distal_gDist") +
   scale_fill_viridis_c(option='magma', direction=-1, trans='sqrt')
-ggsave(plot=spatial_prox_dist, filename="spatial_prox_dist.png",
+ggsave(plot=spatial_Distal_gDist, filename="spatial_Distal_gDist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
-spots_per_prox_dist <- plot_spots_per_gdist(Cavity, ring_col='Prox_Dist',
+spots_per_Distal_gDist <- plot_spots_per_gdist(Cavity, ring_col='Distal_gDist',
                                             cols = c('ctl OVX'=seurat_cols[1],
                                                      'Wnt1 OVX'=seurat_cols[2]))
-ggsave(plot=spots_per_prox_dist, filename="spots_per_prox_dist.png",
+ggsave(plot=spots_per_Distal_gDist, filename="spots_per_Distal_gDist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
-nCounts_per_prox_dist <- FeatureScatter(Cavity, feature1="Prox_Dist", feature2="nCount_Spatial",
+nCounts_per_Distal_gDist <- FeatureScatter(Cavity, feature1="Distal_gDist", feature2="nCount_Spatial",
                                    split.by="group", group.by="group", plot.cor=F, log=F) +
   scale_color_manual(values=seurat_cols)
-ggsave(plot=nCounts_per_prox_dist, filename="nCounts_per_prox_dist.png",
+ggsave(plot=nCounts_per_Distal_gDist, filename="nCounts_per_Distal_gDist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
-nFeature_per_prox_dist <- FeatureScatter(Cavity, feature1="Prox_Dist", feature2="nFeature_Spatial",
+nFeature_per_Distal_gDist <- FeatureScatter(Cavity, feature1="Distal_gDist", feature2="nFeature_Spatial",
                                     split.by="group", group.by="group", plot.cor=F, log=F) +
   scale_color_manual(values=seurat_cols)
-ggsave(plot=nFeature_per_prox_dist, filename="nFeature_per_prox_dist.png",
+ggsave(plot=nFeature_per_Distal_gDist, filename="nFeature_per_Distal_gDist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
 
 # Prox distances in Cortex
 CortBone <- subset(obj, spa == "CortBone")
-spatial_prox_dist <- SpatialFeaturePlot(CortBone, features="Prox_Dist") +
+spatial_Distal_gDist <- SpatialFeaturePlot(CortBone, features="Distal_gDist") +
   scale_fill_viridis_c(option='magma', direction=-1, trans='sqrt')
-ggsave(plot=spatial_prox_dist, filename="spatial_prox_dist.png",
+ggsave(plot=spatial_Distal_gDist, filename="spatial_Distal_gDist.png",
        path=here("results", "figures", "CortBone"), dpi=300, width=6, height=3)
 
-spots_per_prox_dist <- plot_spots_per_gdist(CortBone, ring_col='Prox_Dist',
+spots_per_Distal_gDist <- plot_spots_per_gdist(CortBone, ring_col='Distal_gDist',
                                             cols = c('ctl OVX'=seurat_cols[1],
                                                      'Wnt1 OVX'=seurat_cols[2]))
-ggsave(plot=spots_per_prox_dist, filename="spots_per_prox_dist.png",
+ggsave(plot=spots_per_Distal_gDist, filename="spots_per_Distal_gDist.png",
        path=here("results", "figures", "CortBone"), dpi=300, width=6, height=3)
 
-nCounts_per_prox_dist <- FeatureScatter(CortBone, feature1="Prox_Dist", feature2="nCount_Spatial",
+nCounts_per_Distal_gDist <- FeatureScatter(CortBone, feature1="Distal_gDist", feature2="nCount_Spatial",
                                         split.by="group", group.by="group", plot.cor=F, log=F) +
   scale_color_manual(values=seurat_cols)
-ggsave(plot=nCounts_per_prox_dist, filename="nCounts_per_prox_dist.png",
+ggsave(plot=nCounts_per_Distal_gDist, filename="nCounts_per_Distal_gDist.png",
        path=here("results", "figures", "CortBone"), dpi=300, width=6, height=3)
 
-nFeature_per_prox_dist <- FeatureScatter(CortBone, feature1="Prox_Dist", feature2="nFeature_Spatial",
+nFeature_per_Distal_gDist <- FeatureScatter(CortBone, feature1="Distal_gDist", feature2="nFeature_Spatial",
                                          split.by="group", group.by="group", plot.cor=F, log=F) +
   scale_color_manual(values=seurat_cols)
-ggsave(plot=nFeature_per_prox_dist, filename="nFeature_per_prox_dist.png",
+ggsave(plot=nFeature_per_Distal_gDist, filename="nFeature_per_Distal_gDist.png",
        path=here("results", "figures", "CortBone"), dpi=300, width=6, height=3)
 

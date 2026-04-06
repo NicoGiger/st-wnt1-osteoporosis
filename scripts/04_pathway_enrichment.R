@@ -8,18 +8,18 @@ source(here("src","r","libraries.R"))
 # Paths
 
 ##Cavity trab dist
-path_in_cavity_trab_dist <- here("data", "Cavity_trab_dist_reg.rds")
+path_in_cavity_Trab_gDist <- here("data", "Cavity_Trab_gDist_reg.rds")
 ##Cavity prox dist
-path_in_cavity_prox_dist <- here("data", "Cavity_prox_dist_reg.rds")
+path_in_cavity_Distal_gDist <- here("data", "Cavity_Distal_gDist_reg.rds")
 
 ##CortBone prox dist
-path_in_cortBone_prox_dist <- here("data", "CortBone_prox_dist_reg.rds")
+path_in_cortBone_Distal_gDist <- here("data", "CortBone_Distal_gDist_reg.rds")
 
 
 # Load data
-cavity_trab_dist <- readRDS(path_in_cavity_trab_dist)
-cavity_prox_dist <- readRDS(path_in_cavity_prox_dist)
-cortBone_prox_dist <- readRDS(path_in_cortBone_prox_dist)
+cavity_Trab_gDist <- readRDS(path_in_cavity_Trab_gDist)
+cavity_Distal_gDist <- readRDS(path_in_cavity_Distal_gDist)
+cortBone_Distal_gDist <- readRDS(path_in_cortBone_Distal_gDist)
 
 # Get Hallmark (H) database
 db_hallmark <- msigdbr(species="Mus musculus", collection="H") %>%
@@ -31,7 +31,7 @@ db_hallmark <- msigdbr(species="Mus musculus", collection="H") %>%
 
 ## Cavity trab dist ######
 ## SHIFT ranking (signed)
-res <- cavity_trab_dist
+res <- cavity_Trab_gDist
 gl_shift <- res$shift$t
 names(gl_shift) <- rownames(res$shift)
 gl_shift <- gl_shift[is.finite(gl_shift)]
@@ -63,17 +63,17 @@ gsea_shift <- GSEA(
   nPermSimple=10000)
 
 ## save data
-saveRDS(gsea_shift, file=here("data", "gsea_shift_cavity_trab_dist.rds"))
-write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cavity_trab_dist.csv"))
+saveRDS(gsea_shift, file=here("data", "gsea_shift_cavity_Trab_gDist.rds"))
+write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cavity_Trab_gDist.csv"))
 
-saveRDS(gsea_shape, file=here("data", "gsea_shape_cavity_trab_dist.rds"))
-write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cavity_trab_dist.csv"))
+saveRDS(gsea_shape, file=here("data", "gsea_shape_cavity_Trab_gDist.rds"))
+write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cavity_Trab_gDist.csv"))
 
 
 ## Cavity prox dist ######
 
 ## SHIFT ranking (signed)
-res <- cavity_prox_dist
+res <- cavity_Distal_gDist
 gl_shift <- res$shift$t
 names(gl_shift) <- rownames(res$shift)
 gl_shift <- gl_shift[is.finite(gl_shift)]
@@ -105,16 +105,16 @@ gsea_shift <- GSEA(
   nPermSimple=10000)
 
 ## save data
-saveRDS(gsea_shift, file=here("data", "gsea_shift_cavity_prox_dist.rds"))
-write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cavity_prox_dist.csv"))
+saveRDS(gsea_shift, file=here("data", "gsea_shift_cavity_Distal_gDist.rds"))
+write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cavity_Distal_gDist.csv"))
 
-saveRDS(gsea_shape, file=here("data", "gsea_shape_cavity_prox_dist.rds"))
-write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cavity_prox_dist.csv"))
+saveRDS(gsea_shape, file=here("data", "gsea_shape_cavity_Distal_gDist.rds"))
+write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cavity_Distal_gDist.csv"))
 
 ## Cortex prox dist ####
 
 ## SHIFT ranking (signed)
-res <- cortBone_prox_dist
+res <- cortBone_Distal_gDist
 gl_shift <- res$shift$t
 names(gl_shift) <- rownames(res$shift)
 gl_shift <- gl_shift[is.finite(gl_shift)]
@@ -146,8 +146,8 @@ gsea_shift <- GSEA(
   nPermSimple=10000)
 
 ## save data
-saveRDS(gsea_shift, file=here("data", "gsea_shift_cortBone_prox_dist.rds"))
-write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cortBone_prox_dist.csv"))
+saveRDS(gsea_shift, file=here("data", "gsea_shift_cortBone_Distal_gDist.rds"))
+write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cortBone_Distal_gDist.csv"))
 
-saveRDS(gsea_shape, file=here("data", "gsea_shape_cortBone_prox_dist.rds"))
-write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cortBone_prox_dist.csv"))
+saveRDS(gsea_shape, file=here("data", "gsea_shape_cortBone_Distal_gDist.rds"))
+write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cortBone_Distal_gDist.csv"))

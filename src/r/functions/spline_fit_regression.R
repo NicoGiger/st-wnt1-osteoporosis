@@ -287,8 +287,8 @@ spline_limma_abs <- function(
 
     meta <- data.frame(
       group = stats::relevel(
-        factor(c(rep("Control OVX", ncol(Y_wt)), rep("Wnt1tg OVX", ncol(Y_oe)))),
-        ref = "Control OVX"
+        factor(c(rep("ctl OVX", ncol(Y_wt)), rep("Wnt1 OVX", ncol(Y_oe)))),
+        ref = "ctl OVX"
       ),
       dist = c(dist_axis[ok], dist_axis[ok]),
       dist_label = c(bin_labels_ok, bin_labels_ok),
@@ -332,8 +332,8 @@ spline_limma_abs <- function(
 
     meta <- data.frame(
       group = stats::relevel(
-        factor(c(rep("Control OVX", ncol(Y_wt)), rep("Wnt1tg OVX", ncol(Y_oe)))),
-        ref = "Control OVX"
+        factor(c(rep("ctl OVX", ncol(Y_wt)), rep("Wnt1 OVX", ncol(Y_oe)))),
+        ref = "ctl OVX"
       ),
       dist = c(dist_axis[ok], dist_axis[ok]),
       dist_label = c(dist_labels_ok, dist_labels_ok),
