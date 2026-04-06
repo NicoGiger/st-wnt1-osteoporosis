@@ -13,10 +13,11 @@ source(here("src","r", "functions", "plot_spots_per_gdist.R"))
 
 # Load data
 obj <- readRDS(path_in)
+obj$group %>% unique()
 # QC plots
 plt_groups_annotations <- SpatialDimPlot(obj, group.by='group',
-                                         cols = c('Control OVX'=seurat_cols[1],
-                                         'Wnt1tg OVX'=seurat_cols[2])) +
+                                         cols = c('ctl OVX'=seurat_cols[1],
+                                         'Wnt1 OVX'=seurat_cols[2])) +
   theme(
     legend.text = element_text(size = 14),
     legend.title = element_blank()
@@ -47,8 +48,8 @@ ggsave(plot=counts_spatial, filename="counts_spatial.png",
        path=here("results", "figures"), dpi=300, width=6, height=3)
 
 counts_violine <- VlnPlot(obj, features='nCount_Spatial', log=T,
-                          group.by='spa', split.by="group", cols = c('Control OVX'=seurat_cols[1],
-                                                                    'Wnt1tg OVX'=seurat_cols[2]))+
+                          group.by='spa', split.by="group", cols = c('Ctll OVX'=seurat_cols[1],
+                                                                    'Wnt1 OVX'=seurat_cols[2]))+
   theme(axis.text.x=element_text(angle=0, hjust=0.5))
 ggsave(plot=counts_violine, filename="counts_violine.png",
        path=here("results", "figures"), dpi=300, width=6, height=3)
@@ -58,8 +59,8 @@ ggsave(plot=features_spatial, filename="features_spatial.png",
        path=here("results", "figures"), dpi=300, width=6, height=3)
 
 features_violine <- VlnPlot(obj, features='nFeature_Spatial', log=T,
-                            group.by='spa', split.by='group', cols = c('Control OVX'=seurat_cols[1],
-                                                                       'Wnt1tg OVX'=seurat_cols[2])) +
+                            group.by='spa', split.by='group', cols = c('ctl OVX'=seurat_cols[1],
+                                                                       'Wnt1 OVX'=seurat_cols[2])) +
   theme(axis.text.x=element_text(angle=0, hjust=0.5))
 ggsave(plot=features_violine, filename="features_violine.png",
        path=here("results", "figures"), dpi=300, width=6, height=3)
@@ -73,8 +74,8 @@ ggsave(plot=spatial_trab_dist, filename="spatial_trab_dist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
 spots_per_trab_dist <- plot_spots_per_gdist(Cavity, ring_col="Trab_Dist",
-                                            cols = c('Control OVX'=seurat_cols[1],
-                                                     'Wnt1tg OVX'=seurat_cols[2]))
+                                            cols = c('ctl OVX'=seurat_cols[1],
+                                                     'Wnt1 OVX'=seurat_cols[2]))
 ggsave(plot=spots_per_trab_dist, filename="spots_per_trab_dist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
@@ -100,8 +101,8 @@ ggsave(plot=spatial_prox_dist, filename="spatial_prox_dist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
 spots_per_prox_dist <- plot_spots_per_gdist(Cavity, ring_col='Prox_Dist',
-                                            cols = c('Control OVX'=seurat_cols[1],
-                                                     'Wnt1tg OVX'=seurat_cols[2]))
+                                            cols = c('ctl OVX'=seurat_cols[1],
+                                                     'Wnt1 OVX'=seurat_cols[2]))
 ggsave(plot=spots_per_prox_dist, filename="spots_per_prox_dist.png",
        path=here("results", "figures", "Cavity"), dpi=300, width=6, height=3)
 
@@ -126,8 +127,8 @@ ggsave(plot=spatial_prox_dist, filename="spatial_prox_dist.png",
        path=here("results", "figures", "CortBone"), dpi=300, width=6, height=3)
 
 spots_per_prox_dist <- plot_spots_per_gdist(CortBone, ring_col='Prox_Dist',
-                                            cols = c('Control OVX'=seurat_cols[1],
-                                                     'Wnt1tg OVX'=seurat_cols[2]))
+                                            cols = c('ctl OVX'=seurat_cols[1],
+                                                     'Wnt1 OVX'=seurat_cols[2]))
 ggsave(plot=spots_per_prox_dist, filename="spots_per_prox_dist.png",
        path=here("results", "figures", "CortBone"), dpi=300, width=6, height=3)
 

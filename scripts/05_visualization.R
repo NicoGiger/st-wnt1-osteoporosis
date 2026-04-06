@@ -60,8 +60,8 @@ GOIs <- c("Wnt1","Mmp9", "Col1a2")
 dist_col <- "Trab_Dist"
 
 obj_splitted <- obj %>% SplitObject(split.by='group') #split into experimental groups
-obj_wt <- obj_splitted$`Control OVX`
-obj_oe <- obj_splitted$`Wnt1tg OVX`
+obj_wt <- obj_splitted$`ctl OVX`
+obj_oe <- obj_splitted$`Wnt1 OVX`
 
 
 ## Venn Diagrams
@@ -129,8 +129,8 @@ ggsave(plot=venn_plt, filename= 'venn_plot.png',
        path=path_out, dpi=300, width=6, height=3)
 
 obj_splitted <- obj %>% SplitObject(split.by='group') #split into experimental groups
-obj_wt <- obj_splitted$`Control OVX`
-obj_oe <- obj_splitted$`Wnt1tg OVX`
+obj_wt <- obj_splitted$`ctl OVX`
+obj_oe <- obj_splitted$`Wnt1 OVX`
 
 for (gene in GOIs){
   spline_plt <- spline_fit_plt(res, obj_wt, obj_oe, gene=gene,
@@ -190,8 +190,8 @@ ggsave(plot=venn_plt, filename= 'venn_plot.png',
        path=path_out, dpi=300, width=6, height=3)
 
 obj_splitted <- obj %>% SplitObject(split.by='group') #split into experimental groups
-obj_wt <- obj_splitted$`Control OVX`
-obj_oe <- obj_splitted$`Wnt1tg OVX`
+obj_wt <- obj_splitted$`ctl OVX`
+obj_oe <- obj_splitted$`Wnt1 OVX`
 
 for (gene in GOIs){
   spline_plt <- spline_fit_plt(res, obj_wt, obj_oe, gene=gene,

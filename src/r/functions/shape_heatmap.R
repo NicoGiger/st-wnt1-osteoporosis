@@ -80,7 +80,7 @@ shape_heatmap <- function(res, top_n = 40, scale_rows = TRUE) {
   pheatmap::pheatmap(
     DIFF,
     scale = sc,
-    main = "Wnt1tg OVX - Control OVX difference",
+    main = "Wnt1 OVX - ctl OVX difference",
     cluster_cols = FALSE,
     clustering_distance_rows = "correlation",
     clustering_method = "average",
