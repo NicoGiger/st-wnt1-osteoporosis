@@ -43,7 +43,7 @@ Cavity_Distal_gDist_reg <- spline_limma_abs(Cavity_split$`ctl OVX`, Cavity_split
                         max_dist=K, spline_df=4) # K-1: trabecular Bone is distance 0
 
 saveRDS(Cavity_Distal_gDist_reg, file=here("data", "Cavity_Distal_gDist_reg.rds"))
-write.csv2(Cavity_Distal_gDist_reg$shift,
+write.csv(Cavity_Distal_gDist_reg$shift,
            file=here("results", "shift_cavity_Distal_gDist.csv"), row.names = TRUE)
 write.csv2(Cavity_Distal_gDist_reg$shape,
            file=here("results", "shape_cavity_Distal_gDist.csv"), row.names = TRUE)
