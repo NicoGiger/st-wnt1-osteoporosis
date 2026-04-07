@@ -63,11 +63,11 @@ gsea_shift <- GSEA(
 
 ## save data
 saveRDS(gsea_shift, file=here("data", "gsea_shift_cavity_Trab_gDist.rds"))
-write.csv2(gsea_shift@result,
+write.csv(gsea_shift@result,
            file=here("results", "gsea_shift_cavity_Trab_gDist.csv"), row.names = TRUE)
 
 saveRDS(gsea_shape, file=here("data", "gsea_shape_cavity_Trab_gDist.rds"))
-write.csv2(gsea_shape@result,
+write.csv(gsea_shape@result,
            file=here("results", "gsea_shape_cavity_Trab_gDist.csv"), row.names = TRUE)
 
 
@@ -107,11 +107,11 @@ gsea_shift <- GSEA(
 
 ## save data
 saveRDS(gsea_shift, file=here("data", "gsea_shift_cavity_Distal_gDist.rds"))
-write.csv2(gsea_shift@result,
+write.csv(gsea_shift@result,
            file=here("results", "gsea_shift_cavity_Distal_gDist.csv"), row.names = TRUE)
 
 saveRDS(gsea_shape, file=here("data", "gsea_shape_cavity_Distal_gDist.rds"))
-write.csv2(gsea_shape@result,
+write.csv(gsea_shape@result,
            file=here("results", "gsea_shape_cavity_Distal_gDist.csv"), row.names = TRUE)
 
 ## Cortex prox dist ####
@@ -150,9 +150,9 @@ gsea_shift <- GSEA(
 
 ## save data
 saveRDS(gsea_shift, file=here("data", "gsea_shift_cortBone_Distal_gDist.rds"))
-write.csv2(gsea_shift@result,
+write.csv(gsea_shift@result,
            file=here("results", "gsea_shift_cortBone_Distal_gDist.csv"), row.names = TRUE)
 
 saveRDS(gsea_shape, file=here("data", "gsea_shape_cortBone_Distal_gDist.rds"))
-write.csv2(gsea_shape@result,
+write.csv(gsea_shape@result,
            file=here("results", "gsea_shape_cortBone_Distal_gDist.csv"), row.names = TRUE)
