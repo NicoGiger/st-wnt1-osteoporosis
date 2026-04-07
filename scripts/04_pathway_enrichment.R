@@ -11,7 +11,6 @@ source(here("src","r","libraries.R"))
 path_in_cavity_Trab_gDist <- here("data", "Cavity_Trab_gDist_reg.rds")
 ##Cavity prox dist
 path_in_cavity_Distal_gDist <- here("data", "Cavity_Distal_gDist_reg.rds")
-
 ##CortBone prox dist
 path_in_cortBone_Distal_gDist <- here("data", "CortBone_Distal_gDist_reg.rds")
 
@@ -64,10 +63,12 @@ gsea_shift <- GSEA(
 
 ## save data
 saveRDS(gsea_shift, file=here("data", "gsea_shift_cavity_Trab_gDist.rds"))
-write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cavity_Trab_gDist.csv"))
+write.csv2(gsea_shift@result,
+           file=here("results", "gsea_shift_cavity_Trab_gDist.csv"), row.names = TRUE)
 
 saveRDS(gsea_shape, file=here("data", "gsea_shape_cavity_Trab_gDist.rds"))
-write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cavity_Trab_gDist.csv"))
+write.csv2(gsea_shape@result,
+           file=here("results", "gsea_shape_cavity_Trab_gDist.csv"), row.names = TRUE)
 
 
 ## Cavity prox dist ######
@@ -106,10 +107,12 @@ gsea_shift <- GSEA(
 
 ## save data
 saveRDS(gsea_shift, file=here("data", "gsea_shift_cavity_Distal_gDist.rds"))
-write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cavity_Distal_gDist.csv"))
+write.csv2(gsea_shift@result,
+           file=here("results", "gsea_shift_cavity_Distal_gDist.csv"), row.names = TRUE)
 
 saveRDS(gsea_shape, file=here("data", "gsea_shape_cavity_Distal_gDist.rds"))
-write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cavity_Distal_gDist.csv"))
+write.csv2(gsea_shape@result,
+           file=here("results", "gsea_shape_cavity_Distal_gDist.csv"), row.names = TRUE)
 
 ## Cortex prox dist ####
 
@@ -147,7 +150,9 @@ gsea_shift <- GSEA(
 
 ## save data
 saveRDS(gsea_shift, file=here("data", "gsea_shift_cortBone_Distal_gDist.rds"))
-write.csv2(gsea_shift@result, file=here("results", "gsea_shift_cortBone_Distal_gDist.csv"))
+write.csv2(gsea_shift@result,
+           file=here("results", "gsea_shift_cortBone_Distal_gDist.csv"), row.names = TRUE)
 
 saveRDS(gsea_shape, file=here("data", "gsea_shape_cortBone_Distal_gDist.rds"))
-write.csv2(gsea_shape@result, file=here("results", "gsea_shape_cortBone_Distal_gDist.csv"))
+write.csv2(gsea_shape@result,
+           file=here("results", "gsea_shape_cortBone_Distal_gDist.csv"), row.names = TRUE)

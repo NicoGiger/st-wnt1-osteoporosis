@@ -27,8 +27,10 @@ Cavity_Trab_gDist_reg <- spline_limma_abs(Cavity_K12_split$`ctl OVX`, Cavity_K12
                         max_dist=K-1, spline_df=6) # K-1: trabecular Bone is distance 0
 
 saveRDS(Cavity_Trab_gDist_reg, file=here("data", "Cavity_Trab_gDist_reg.rds"))
-write.csv2(Cavity_Trab_gDist_reg$shift, file=here("results", "shift_cavity_Trab_gDist.csv"))
-write.csv2(Cavity_Trab_gDist_reg$shape, file=here("results", "shape_cavity_Trab_gDist.csv"))
+write.csv2(Cavity_Trab_gDist_reg$shift,
+           file=here("results", "shift_cavity_Trab_gDist.csv"), row.names = TRUE)
+write.csv2(Cavity_Trab_gDist_reg$shape,
+           file=here("results", "shape_cavity_Trab_gDist.csv"), row.names = TRUE)
 
 
 # Distal_gDist in Cavity
@@ -41,8 +43,10 @@ Cavity_Distal_gDist_reg <- spline_limma_abs(Cavity_split$`ctl OVX`, Cavity_split
                         max_dist=K, spline_df=4) # K-1: trabecular Bone is distance 0
 
 saveRDS(Cavity_Distal_gDist_reg, file=here("data", "Cavity_Distal_gDist_reg.rds"))
-write.csv2(Cavity_Distal_gDist_reg$shift, file=here("results", "shift_cavity_Distal_gDist.csv"))
-write.csv2(Cavity_Distal_gDist_reg$shape, file=here("results", "shape_cavity_Distal_gDist.csv"))
+write.csv2(Cavity_Distal_gDist_reg$shift,
+           file=here("results", "shift_cavity_Distal_gDist.csv"), row.names = TRUE)
+write.csv2(Cavity_Distal_gDist_reg$shape,
+           file=here("results", "shape_cavity_Distal_gDist.csv"), row.names = TRUE)
 
 # Distal_gDist in CortBone
 CortBone_split <- SplitObject(CortBone, split.by="group")
@@ -53,6 +57,8 @@ CortBone_Distal_gDist_reg <- spline_limma_abs(CortBone_split$`ctl OVX`, CortBone
                         filter_assay="Spatial", filter_layer="counts",
                         max_dist=K, spline_df=4)
 saveRDS(CortBone_Distal_gDist_reg, file=here("data", "CortBone_Distal_gDist_reg.rds"))
-write.csv2(CortBone_Distal_gDist_reg$shift, file=here("results", "shift_cortBone_Distal_gDist.csv"))
-write.csv2(CortBone_Distal_gDist_reg$shape, file=here("results", "shape_cortBone_Distal_gDist.csv"))
+write.csv2(CortBone_Distal_gDist_reg$shift,
+           file=here("results", "shift_cortBone_Distal_gDist.csv"), row.names = TRUE)
+write.csv2(CortBone_Distal_gDist_reg$shape,
+           file=here("results", "shape_cortBone_Distal_gDist.csv"), row.names = TRUE)
 
